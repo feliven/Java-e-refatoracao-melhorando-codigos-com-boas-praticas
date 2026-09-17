@@ -12,67 +12,48 @@ public class ConsumoApi {
     String uriBase = "http://localhost:8080/abrigos";
     HttpClient client = HttpClient.newHttpClient();
 
-    public HttpResponse<String> getAbrigos() {
+    public HttpResponse<String> getAbrigos() throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uriBase))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
 
-        try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response;
-        } catch (IOException | InterruptedException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response;
 
     }
 
-    public HttpResponse<String> postAbrigo(JsonObject json) {
+    public HttpResponse<String> postAbrigo(JsonObject json) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uriBase))
                 .header("Content-Type", "application/json")
                 .method("POST", HttpRequest.BodyPublishers.ofString(json.toString()))
                 .build();
 
-        try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response;
-        } catch (IOException | InterruptedException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response;
     }
 
-    public HttpResponse<String> getPets(String idOuNome) {
+    public HttpResponse<String> getPets(String idOuNome) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uriBase + idOuNome + "/pets"))
+                .uri(URI.create(uriBase + '/' + idOuNome + "/pets"))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
-        try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response;
-        } catch (IOException | InterruptedException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response;
     }
 
-    public HttpResponse<String> postPets(String idOuNome, JsonObject json) {
+    public HttpResponse<String> postPets(String idOuNome, JsonObject json) throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uriBase + idOuNome + "/pets"))
+                .uri(URI.create(uriBase + '/' + idOuNome + "/pets"))
                 .header("Content-Type", "application/json")
                 .method("POST", HttpRequest.BodyPublishers.ofString(json.toString()))
                 .build();
 
-        try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response;
-        } catch (IOException | InterruptedException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response;
     }
 }

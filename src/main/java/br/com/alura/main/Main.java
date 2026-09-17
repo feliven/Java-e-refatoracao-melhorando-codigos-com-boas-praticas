@@ -3,6 +3,7 @@ package br.com.alura.main;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.http.HttpResponse;
 import java.util.Scanner;
 
@@ -10,7 +11,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 import br.com.alura.service.ConsumoApi;
 
@@ -63,9 +63,9 @@ public class Main {
     }
 
     public void listarAbrigos() {
+
         try {
             HttpResponse<String> response = consumoApi.getAbrigos();
-
             JsonArray jsonArray = JsonParser.parseString(response.body()).getAsJsonArray();
             System.out.println("Abrigos cadastrados:");
             for (JsonElement element : jsonArray) {
@@ -74,8 +74,11 @@ public class Main {
                 String nome = jsonObject.get("nome").getAsString();
                 System.out.println(id + " - " + nome);
             }
-        } catch (JsonSyntaxException e) {
-            System.out.println(e.getMessage());
+        } catch (ConnectException e) {
+            System.out.println("Impossível acessar a API");
+        } catch (Exception e) {
+            System.out.println("listarAbrigos(): ");
+            e.printStackTrace();
         }
     }
 
@@ -92,39 +95,51 @@ public class Main {
         json.addProperty("telefone", telefone);
         json.addProperty("email", email);
 
-        HttpResponse<String> response = consumoApi.postAbrigo(json);
-
-        int statusCode = response.statusCode();
-        if (statusCode == 200) {
-            System.out.println("Abrigo cadastrado com sucesso!");
-        } else if (statusCode == 400 || statusCode == 500) {
-            System.out.println("Erro ao cadastrar o abrigo:");
+        try {
+            HttpResponse<String> response = consumoApi.postAbrigo(json);
+            int statusCode = response.statusCode();
+            if (statusCode == 200) {
+                System.out.println("Abrigo cadastrado com sucesso!");
+            } else if (statusCode == 400 || statusCode == 500) {
+                System.out.println("Erro ao cadastrar o abrigo:");
+            }
+            System.out.println(response.body());
+        } catch (ConnectException e) {
+            System.out.println("Impossível acessar a API");
+        } catch (Exception e) {
+            System.out.println("cadastrarAbrigo(): ");
+            e.printStackTrace();
         }
-        System.out.println(response.body());
     }
 
     public void listarPets() {
         System.out.println("Digite o id ou nome do abrigo:");
         String idOuNome = scanner.nextLine();
 
-        HttpResponse<String> response = consumoApi.getPets(idOuNome);
+        try {
+            HttpResponse<String> response = consumoApi.getPets(idOuNome);
+            int statusCode = response.statusCode();
+            if (statusCode == 404 || statusCode == 500) {
+                System.out.println("ID ou nome não cadastrado!");
+                return;
+            }
 
-        int statusCode = response.statusCode();
-        if (statusCode == 404 || statusCode == 500) {
-            System.out.println("ID ou nome não cadastrado!");
-            return;
-        }
-
-        JsonArray jsonArray = JsonParser.parseString(response.body()).getAsJsonArray();
-        System.out.println("Pets cadastrados:");
-        for (JsonElement element : jsonArray) {
-            JsonObject jsonObject = element.getAsJsonObject();
-            long id = jsonObject.get("id").getAsLong();
-            String tipo = jsonObject.get("tipo").getAsString();
-            String nome = jsonObject.get("nome").getAsString();
-            String raca = jsonObject.get("raca").getAsString();
-            int idade = jsonObject.get("idade").getAsInt();
-            System.out.println(id + " - " + tipo + " - " + nome + " - " + raca + " - " + idade + " ano(s)");
+            JsonArray jsonArray = JsonParser.parseString(response.body()).getAsJsonArray();
+            System.out.println("Pets cadastrados:");
+            for (JsonElement element : jsonArray) {
+                JsonObject jsonObject = element.getAsJsonObject();
+                long id = jsonObject.get("id").getAsLong();
+                String tipo = jsonObject.get("tipo").getAsString();
+                String nome = jsonObject.get("nome").getAsString();
+                String raca = jsonObject.get("raca").getAsString();
+                int idade = jsonObject.get("idade").getAsInt();
+                System.out.println(id + " - " + tipo + " - " + nome + " - " + raca + " - " + idade + " ano(s)");
+            }
+        } catch (ConnectException e) {
+            System.out.println("Impossível acessar a API");
+        } catch (Exception e) {
+            System.out.println("listarPets(): ");
+            e.printStackTrace();
         }
     }
 
@@ -171,9 +186,14 @@ public class Main {
                 }
             }
             reader.close();
+        } catch (ConnectException e) {
+            System.out.println("Impossível acessar a API");
         } catch (IOException e) {
             System.out.println("Erro ao carregar o arquivo: " + nomeArquivo);
             return;
+        } catch (Exception e) {
+            System.out.println("cadastrarPets(): ");
+            e.printStackTrace();
         }
 
     }
