@@ -6,7 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
 public class ConsumoApi {
     String uriBase = "http://localhost:8080/abrigos";
@@ -27,11 +27,11 @@ public class ConsumoApi {
 
     }
 
-    public HttpResponse<String> postAbrigo(JsonObject json) throws IOException, InterruptedException {
+    public HttpResponse<String> postAbrigo(Object object) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uriBase))
                 .header("Content-Type", "application/json")
-                .method("POST", HttpRequest.BodyPublishers.ofString(json.toString()))
+                .method("POST", HttpRequest.BodyPublishers.ofString(new Gson().toJson(object)))
                 .build();
 
         return client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -47,12 +47,12 @@ public class ConsumoApi {
 
     }
 
-    public HttpResponse<String> postPets(String idOuNome, JsonObject json) throws IOException, InterruptedException {
+    public HttpResponse<String> postPets(String idOuNome, Object object) throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uriBase + '/' + idOuNome + "/pets"))
                 .header("Content-Type", "application/json")
-                .method("POST", HttpRequest.BodyPublishers.ofString(json.toString()))
+                .method("POST", HttpRequest.BodyPublishers.ofString(new Gson().toJson(object)))
                 .build();
 
         return client.send(request, HttpResponse.BodyHandlers.ofString());

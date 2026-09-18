@@ -9,6 +9,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import br.com.alura.dto.AbrigoDto;
+
 public class AbrigoService {
 
     private final Scanner scanner;
@@ -47,13 +49,10 @@ public class AbrigoService {
         System.out.println("Digite o email do abrigo:");
         String email = scanner.nextLine();
 
-        JsonObject json = new JsonObject();
-        json.addProperty("nome", nome);
-        json.addProperty("telefone", telefone);
-        json.addProperty("email", email);
+        AbrigoDto abrigo = new AbrigoDto(nome, telefone, email);
 
         try {
-            HttpResponse<String> response = consumoApi.postAbrigo(json);
+            HttpResponse<String> response = consumoApi.postAbrigo(abrigo);
             int statusCode = response.statusCode();
             if (statusCode == 200) {
                 System.out.println("Abrigo cadastrado com sucesso!");

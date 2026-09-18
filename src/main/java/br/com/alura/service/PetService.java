@@ -12,6 +12,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import br.com.alura.dto.PetDto;
+
 public class PetService {
 
     private final Scanner scanner;
@@ -73,15 +75,9 @@ public class PetService {
                 String cor = campos[4];
                 Float peso = Float.parseFloat(campos[5]);
 
-                JsonObject json = new JsonObject();
-                json.addProperty("tipo", tipo.toUpperCase());
-                json.addProperty("nome", nome);
-                json.addProperty("raca", raca);
-                json.addProperty("idade", idade);
-                json.addProperty("cor", cor);
-                json.addProperty("peso", peso);
+                PetDto pet = new PetDto(tipo, nome, raca, idade, cor, peso);
 
-                HttpResponse<String> response = consumoApi.postPets(idOuNome, json);
+                HttpResponse<String> response = consumoApi.postPets(idOuNome, pet);
 
                 int statusCode = response.statusCode();
                 if (statusCode == 200) {
