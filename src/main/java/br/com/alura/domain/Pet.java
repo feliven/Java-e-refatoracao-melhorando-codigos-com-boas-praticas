@@ -1,8 +1,10 @@
 package br.com.alura.domain;
 
+import br.com.alura.model.TipoAnimal;
+
 public class Pet {
     long id;
-    String tipo;
+    TipoAnimal tipo;
     String nome;
     String raca;
     int idade;
@@ -14,7 +16,9 @@ public class Pet {
 
     public Pet(long id, String tipo, String nome, String raca, int idade, String cor, Float peso) {
         this.id = id;
-        this.tipo = tipo;
+
+        this.tipo = TipoAnimal.fromString(tipo);
+
         this.nome = nome;
         this.raca = raca;
         this.idade = idade;
@@ -26,7 +30,7 @@ public class Pet {
         return id;
     }
 
-    public String getTipo() {
+    public TipoAnimal getTipo() {
         return tipo;
     }
 

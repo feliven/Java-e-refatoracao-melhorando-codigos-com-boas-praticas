@@ -1,8 +1,10 @@
 package br.com.alura.dto;
 
+import br.com.alura.model.TipoAnimal;
+
 public class PetDto {
 
-    String tipo;
+    TipoAnimal tipo;
     String nome;
     String raca;
     int idade;
@@ -10,7 +12,8 @@ public class PetDto {
     Float peso;
 
     public PetDto(String tipo, String nome, String raca, int idade, String cor, Float peso) {
-        this.tipo = tipo;
+        this.tipo = TipoAnimal.fromString(tipo);
+
         this.nome = nome;
         this.raca = raca;
         this.idade = idade;
@@ -18,7 +21,7 @@ public class PetDto {
         this.peso = peso;
     }
 
-    public String getTipo() {
+    public TipoAnimal getTipo() {
         return tipo;
     }
 

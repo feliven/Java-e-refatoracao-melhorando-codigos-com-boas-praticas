@@ -7,7 +7,6 @@ import java.net.ConnectException;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Scanner;
-
 import br.com.alura.domain.Pet;
 import br.com.alura.dto.PetDto;
 import tools.jackson.databind.ObjectMapper;
@@ -40,7 +39,7 @@ public class PetService {
             System.out.println("Pets cadastrados:");
             for (Pet pet : listaPets) {
                 long id = pet.getId();
-                String tipo = pet.getTipo();
+                String tipo = pet.getTipo().toString().toLowerCase();
                 String nome = pet.getNome();
                 String raca = pet.getRaca();
                 int idade = pet.getIdade();
