@@ -10,7 +10,11 @@ import com.google.gson.JsonObject;
 
 public class ConsumoApi {
     String uriBase = "http://localhost:8080/abrigos";
-    HttpClient client = HttpClient.newHttpClient();
+    private final HttpClient client;
+
+    public ConsumoApi(HttpClient client) {
+        this.client = client;
+    }
 
     public HttpResponse<String> getAbrigos() throws IOException, InterruptedException {
 

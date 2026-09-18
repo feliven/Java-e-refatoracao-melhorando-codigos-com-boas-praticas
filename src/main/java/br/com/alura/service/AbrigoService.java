@@ -11,8 +11,13 @@ import com.google.gson.JsonParser;
 
 public class AbrigoService {
 
-    Scanner scanner = new Scanner(System.in);
-    ConsumoApi consumoApi = new ConsumoApi();
+    private final Scanner scanner;
+    private final ConsumoApi consumoApi;
+
+    public AbrigoService(Scanner scanner, ConsumoApi consumoApi) {
+        this.scanner = scanner;
+        this.consumoApi = consumoApi;
+    }
 
     public void listarAbrigos() {
 

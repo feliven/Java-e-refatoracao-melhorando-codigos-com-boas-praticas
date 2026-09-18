@@ -1,15 +1,19 @@
 package br.com.alura.main;
 
+import java.net.http.HttpClient;
 import java.util.Scanner;
 
 import br.com.alura.service.AbrigoService;
+import br.com.alura.service.ConsumoApi;
 import br.com.alura.service.PetService;
 
 public class Main {
 
     Scanner scanner = new Scanner(System.in);
-    AbrigoService abrigoService = new AbrigoService();
-    PetService petService = new PetService();
+    HttpClient client = HttpClient.newHttpClient();
+    ConsumoApi consumoApi = new ConsumoApi(client);
+    AbrigoService abrigoService = new AbrigoService(scanner, consumoApi);
+    PetService petService = new PetService(scanner, consumoApi);
 
     public void exibirMenu() {
         System.out.println("##### BOAS VINDAS AO SISTEMA ADOPET CONSOLE #####");

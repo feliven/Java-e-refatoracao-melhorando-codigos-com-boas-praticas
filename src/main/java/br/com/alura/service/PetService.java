@@ -14,8 +14,13 @@ import com.google.gson.JsonParser;
 
 public class PetService {
 
-    Scanner scanner = new Scanner(System.in);
-    ConsumoApi consumoApi = new ConsumoApi();
+    private final Scanner scanner;
+    private final ConsumoApi consumoApi;
+
+    public PetService(Scanner scanner, ConsumoApi consumoApi) {
+        this.scanner = scanner;
+        this.consumoApi = consumoApi;
+    }
 
     public void listarPets() {
         System.out.println("Digite o id ou nome do abrigo:");
