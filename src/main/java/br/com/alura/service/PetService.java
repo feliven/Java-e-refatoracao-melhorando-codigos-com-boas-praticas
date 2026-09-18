@@ -5,14 +5,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Scanner;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+import br.com.alura.domain.Pet;
 import br.com.alura.dto.PetDto;
+import tools.jackson.databind.ObjectMapper;
 
 public class PetService {
 
@@ -36,15 +34,16 @@ public class PetService {
                 return;
             }
 
-            JsonArray jsonArray = JsonParser.parseString(response.body()).getAsJsonArray();
+            Pet[] arrayPets = new ObjectMapper().readValue(response.body(), Pet[].class);
+            List<Pet> listaPets = List.of(arrayPets);
+
             System.out.println("Pets cadastrados:");
-            for (JsonElement element : jsonArray) {
-                JsonObject jsonObject = element.getAsJsonObject();
-                long id = jsonObject.get("id").getAsLong();
-                String tipo = jsonObject.get("tipo").getAsString();
-                String nome = jsonObject.get("nome").getAsString();
-                String raca = jsonObject.get("raca").getAsString();
-                int idade = jsonObject.get("idade").getAsInt();
+            for (Pet pet : listaPets) {
+                long id = pet.getId();
+                String tipo = pet.getTipo();
+                String nome = pet.getNome();
+                String raca = pet.getRaca();
+                int idade = pet.getIdade();
                 System.out.println(id + " - " + tipo + " - " + nome + " - " + raca + " - " + idade + " ano(s)");
             }
         } catch (ConnectException e) {

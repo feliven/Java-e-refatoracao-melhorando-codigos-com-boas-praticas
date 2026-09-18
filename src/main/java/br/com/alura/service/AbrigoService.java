@@ -2,14 +2,12 @@ package br.com.alura.service;
 
 import java.net.ConnectException;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Scanner;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+import br.com.alura.domain.Abrigo;
 import br.com.alura.dto.AbrigoDto;
+import tools.jackson.databind.ObjectMapper;
 
 public class AbrigoService {
 
@@ -25,12 +23,14 @@ public class AbrigoService {
 
         try {
             HttpResponse<String> response = consumoApi.getAbrigos();
-            JsonArray jsonArray = JsonParser.parseString(response.body()).getAsJsonArray();
             System.out.println("Abrigos cadastrados:");
-            for (JsonElement element : jsonArray) {
-                JsonObject jsonObject = element.getAsJsonObject();
-                long id = jsonObject.get("id").getAsLong();
-                String nome = jsonObject.get("nome").getAsString();
+
+            Abrigo[] arrayAbrigos = new ObjectMapper().readValue(response.body(), Abrigo[].class);
+            List<Abrigo> listaAbrigos = List.of(arrayAbrigos);
+
+            for (Abrigo abrigo : listaAbrigos) {
+                long id = abrigo.getId();
+                String nome = abrigo.getNome();
                 System.out.println(id + " - " + nome);
             }
         } catch (ConnectException e) {
