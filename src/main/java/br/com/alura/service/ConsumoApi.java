@@ -19,8 +19,7 @@ public class ConsumoApi {
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response;
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
 
     }
 
@@ -31,8 +30,7 @@ public class ConsumoApi {
                 .method("POST", HttpRequest.BodyPublishers.ofString(json.toString()))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response;
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
     public HttpResponse<String> getPets(String idOuNome) throws IOException, InterruptedException {
@@ -41,8 +39,8 @@ public class ConsumoApi {
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response;
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+
     }
 
     public HttpResponse<String> postPets(String idOuNome, JsonObject json) throws IOException, InterruptedException {
@@ -53,7 +51,7 @@ public class ConsumoApi {
                 .method("POST", HttpRequest.BodyPublishers.ofString(json.toString()))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response;
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+
     }
 }
