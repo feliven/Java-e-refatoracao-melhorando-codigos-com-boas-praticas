@@ -1,6 +1,5 @@
 package br.com.alura;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import br.com.alura.command.CadastrarAbrigoCommand;
@@ -27,25 +26,15 @@ public class AdopetConsoleApplication {
                 System.out.println("4 -> Importar pets do abrigo");
                 System.out.println("5 -> Sair");
 
-                try {
-                    opcaoEscolhida = scanner.nextInt();
-                } catch (InputMismatchException e) {
-                }
+                String textoDigitado = scanner.nextLine();
 
-                scanner.nextLine();
-
-                switch (opcaoEscolhida) {
-                    case 1 -> executor.executeCommand(new ListarAbrigoCommand());
-                    case 2 -> executor.executeCommand(new CadastrarAbrigoCommand());
-                    case 3 -> executor.executeCommand(new ListarPetsCommand());
-                    case 4 -> executor.executeCommand(new CadastrarPetsCommand());
-                    case 5 -> {
-                        break;
-                    }
-                    default -> {
-                        System.out.println("NÚMERO INVÁLIDO!");
-                        opcaoEscolhida = 0;
-                    }
+                switch (textoDigitado) {
+                    case "1" -> executor.executeCommand(new ListarAbrigoCommand());
+                    case "2" -> executor.executeCommand(new CadastrarAbrigoCommand());
+                    case "3" -> executor.executeCommand(new ListarPetsCommand());
+                    case "4" -> executor.executeCommand(new CadastrarPetsCommand());
+                    case "5" -> opcaoEscolhida = 5;
+                    default -> System.out.println("NÚMERO INVÁLIDO!");
                 }
             }
             System.out.println("Finalizando o programa...");
@@ -54,7 +43,5 @@ public class AdopetConsoleApplication {
         }
 
         scanner.close();
-
     }
-
 }
