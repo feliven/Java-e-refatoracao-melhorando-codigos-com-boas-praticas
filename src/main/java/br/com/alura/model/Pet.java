@@ -1,6 +1,4 @@
-package br.com.alura.domain;
-
-import br.com.alura.model.TipoAnimal;
+package br.com.alura.model;
 
 public class Pet {
     long id;

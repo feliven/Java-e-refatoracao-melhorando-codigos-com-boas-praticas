@@ -12,7 +12,7 @@ import java.util.Scanner;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import br.com.alura.domain.Abrigo;
+import br.com.alura.model.Abrigo;
 
 public class AbrigoServiceTest {
     private ConsumoApi client = mock(ConsumoApi.class);

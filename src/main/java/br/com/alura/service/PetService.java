@@ -3,12 +3,12 @@ package br.com.alura.service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Scanner;
-import br.com.alura.domain.Pet;
+
 import br.com.alura.dto.PetDto;
+import br.com.alura.model.Pet;
 import tools.jackson.databind.ObjectMapper;
 
 public class PetService {
@@ -21,39 +21,33 @@ public class PetService {
         this.consumoApi = consumoApi;
     }
 
-    public void listarPets() {
+    public void listarPets() throws IOException, InterruptedException {
         System.out.println("Digite o id ou nome do abrigo:");
         String idOuNome = scanner.nextLine();
 
-        try {
-            HttpResponse<String> response = consumoApi.getPets(idOuNome);
-            int statusCode = response.statusCode();
-            if (statusCode == 404 || statusCode == 500) {
-                System.out.println("ID ou nome não cadastrado!");
-                return;
-            }
-
-            Pet[] arrayPets = new ObjectMapper().readValue(response.body(), Pet[].class);
-            List<Pet> listaPets = List.of(arrayPets);
-
-            System.out.println("Pets cadastrados:");
-            for (Pet pet : listaPets) {
-                long id = pet.getId();
-                String tipo = pet.getTipo().toString().toLowerCase();
-                String nome = pet.getNome();
-                String raca = pet.getRaca();
-                int idade = pet.getIdade();
-                System.out.println(id + " - " + tipo + " - " + nome + " - " + raca + " - " + idade + " ano(s)");
-            }
-        } catch (ConnectException e) {
-            System.out.println("Impossível acessar a API");
-        } catch (Exception e) {
-            System.out.println("listarPets(): ");
-            e.printStackTrace();
+        HttpResponse<String> response = consumoApi.getPets(idOuNome);
+        int statusCode = response.statusCode();
+        if (statusCode == 404 || statusCode == 500) {
+            System.out.println("ID ou nome não cadastrado!");
+            return;
         }
+
+        Pet[] arrayPets = new ObjectMapper().readValue(response.body(), Pet[].class);
+        List<Pet> listaPets = List.of(arrayPets);
+
+        System.out.println("Pets cadastrados:");
+        for (Pet pet : listaPets) {
+            long id = pet.getId();
+            String tipo = pet.getTipo().toString().toLowerCase();
+            String nome = pet.getNome();
+            String raca = pet.getRaca();
+            int idade = pet.getIdade();
+            System.out.println(id + " - " + tipo + " - " + nome + " - " + raca + " - " + idade + " ano(s)");
+        }
+
     }
 
-    public void cadastrarPets() {
+    public void cadastrarPets() throws NumberFormatException, IOException, InterruptedException {
         System.out.println("Digite o id ou nome do abrigo:");
         String idOuNome = scanner.nextLine();
 
@@ -61,44 +55,35 @@ public class PetService {
         String nomeArquivo = scanner.nextLine();
 
         BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(nomeArquivo));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] campos = line.split(",");
-                String tipo = campos[0];
-                String nome = campos[1];
-                String raca = campos[2];
-                int idade = Integer.parseInt(campos[3]);
-                String cor = campos[4];
-                Float peso = Float.parseFloat(campos[5]);
 
-                PetDto pet = new PetDto(tipo, nome, raca, idade, cor, peso);
+        reader = new BufferedReader(new FileReader(nomeArquivo));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] campos = line.split(",");
+            String tipo = campos[0];
+            String nome = campos[1];
+            String raca = campos[2];
+            int idade = Integer.parseInt(campos[3]);
+            String cor = campos[4];
+            Float peso = Float.parseFloat(campos[5]);
 
-                HttpResponse<String> response = consumoApi.postPets(idOuNome, pet);
+            PetDto pet = new PetDto(tipo, nome, raca, idade, cor, peso);
 
-                int statusCode = response.statusCode();
-                if (statusCode == 200) {
-                    System.out.println("Pet cadastrado com sucesso: " + nome);
-                } else if (statusCode == 404) {
-                    System.out.println("Id ou nome do abrigo não encontado!");
-                    break;
-                } else if (statusCode == 400 || statusCode == 500) {
-                    System.out.println("Erro ao cadastrar o pet: " + nome);
-                    System.out.println(response.body());
-                    break;
-                }
+            HttpResponse<String> response = consumoApi.postPets(idOuNome, pet);
+
+            int statusCode = response.statusCode();
+            if (statusCode == 200) {
+                System.out.println("Pet cadastrado com sucesso: " + nome);
+            } else if (statusCode == 404) {
+                System.out.println("Id ou nome do abrigo não encontado!");
+                break;
+            } else if (statusCode == 400 || statusCode == 500) {
+                System.out.println("Erro ao cadastrar o pet: " + nome);
+                System.out.println(response.body());
+                break;
             }
-            reader.close();
-        } catch (ConnectException e) {
-            System.out.println("Impossível acessar a API");
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar o arquivo: " + nomeArquivo);
-            return;
-        } catch (Exception e) {
-            System.out.println("cadastrarPets(): ");
-            e.printStackTrace();
         }
+        reader.close();
 
     }
 }

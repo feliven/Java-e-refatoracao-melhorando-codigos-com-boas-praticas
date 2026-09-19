@@ -1,12 +1,12 @@
 package br.com.alura.service;
 
-import java.net.ConnectException;
+import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Scanner;
 
-import br.com.alura.domain.Abrigo;
 import br.com.alura.dto.AbrigoDto;
+import br.com.alura.model.Abrigo;
 import tools.jackson.databind.ObjectMapper;
 
 public class AbrigoService {
@@ -19,27 +19,20 @@ public class AbrigoService {
         this.consumoApi = consumoApi;
     }
 
-    public void listarAbrigos() {
+    public void listarAbrigos() throws IOException, InterruptedException {
 
-        try {
-            HttpResponse<String> response = consumoApi.getAbrigos();
+        HttpResponse<String> response = consumoApi.getAbrigos();
 
-            Abrigo[] arrayAbrigos = new ObjectMapper().readValue(response.body(), Abrigo[].class);
-            List<Abrigo> listaAbrigos = List.of(arrayAbrigos);
+        Abrigo[] arrayAbrigos = new ObjectMapper().readValue(response.body(), Abrigo[].class);
+        List<Abrigo> listaAbrigos = List.of(arrayAbrigos);
 
-            if (listaAbrigos.isEmpty()) {
-                System.out.println("Não há abrigos cadastrados");
-            } else {
-                System.out.println("Abrigos cadastrados:");
-                mostrarAbrigos(listaAbrigos);
-            }
-
-        } catch (ConnectException e) {
-            System.out.println("Impossível acessar a API");
-        } catch (Exception e) {
-            System.out.println("listarAbrigos(): ");
-            e.printStackTrace();
+        if (listaAbrigos.isEmpty()) {
+            System.out.println("Não há abrigos cadastrados");
+        } else {
+            System.out.println("Abrigos cadastrados:");
+            mostrarAbrigos(listaAbrigos);
         }
+
     }
 
     private void mostrarAbrigos(List<Abrigo> listaAbrigos) {
@@ -50,7 +43,7 @@ public class AbrigoService {
         }
     }
 
-    public void cadastrarAbrigo() {
+    public void cadastrarAbrigo() throws IOException, InterruptedException {
         System.out.println("Digite o nome do abrigo:");
         String nome = scanner.nextLine();
         System.out.println("Digite o telefone do abrigo:");
@@ -60,21 +53,13 @@ public class AbrigoService {
 
         AbrigoDto abrigo = new AbrigoDto(nome, telefone, email);
 
-        try {
-            HttpResponse<String> response = consumoApi.postAbrigo(abrigo);
-            int statusCode = response.statusCode();
-            if (statusCode == 200) {
-                System.out.println("Abrigo cadastrado com sucesso!");
-            } else if (statusCode == 400 || statusCode == 500) {
-                System.out.println("Erro ao cadastrar o abrigo:");
-            }
-            System.out.println(response.body());
-        } catch (ConnectException e) {
-            System.out.println("Impossível acessar a API");
-        } catch (Exception e) {
-            System.out.println("cadastrarAbrigo(): ");
-            e.printStackTrace();
+        HttpResponse<String> response = consumoApi.postAbrigo(abrigo);
+        int statusCode = response.statusCode();
+        if (statusCode == 200) {
+            System.out.println("Abrigo cadastrado com sucesso!");
+        } else if (statusCode == 400 || statusCode == 500) {
+            System.out.println("Erro ao cadastrar o abrigo:");
         }
+        System.out.println(response.body());
     }
-
 }
