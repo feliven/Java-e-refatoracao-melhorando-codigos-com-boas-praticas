@@ -23,21 +23,30 @@ public class AbrigoService {
 
         try {
             HttpResponse<String> response = consumoApi.getAbrigos();
-            System.out.println("Abrigos cadastrados:");
 
             Abrigo[] arrayAbrigos = new ObjectMapper().readValue(response.body(), Abrigo[].class);
             List<Abrigo> listaAbrigos = List.of(arrayAbrigos);
 
-            for (Abrigo abrigo : listaAbrigos) {
-                long id = abrigo.getId();
-                String nome = abrigo.getNome();
-                System.out.println(id + " - " + nome);
+            if (listaAbrigos.isEmpty()) {
+                System.out.println("Não há abrigos cadastrados");
+            } else {
+                System.out.println("Abrigos cadastrados:");
+                mostrarAbrigos(listaAbrigos);
             }
+
         } catch (ConnectException e) {
             System.out.println("Impossível acessar a API");
         } catch (Exception e) {
             System.out.println("listarAbrigos(): ");
             e.printStackTrace();
+        }
+    }
+
+    private void mostrarAbrigos(List<Abrigo> listaAbrigos) {
+        for (Abrigo abrigo : listaAbrigos) {
+            long id = abrigo.getId();
+            String nome = abrigo.getNome();
+            System.out.println(id + " - " + nome);
         }
     }
 
