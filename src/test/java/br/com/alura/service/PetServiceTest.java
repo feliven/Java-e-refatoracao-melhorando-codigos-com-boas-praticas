@@ -8,7 +8,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -57,15 +56,14 @@ public class PetServiceTest {
     }
 
     @Test
-    public void deveVerificarSeDispararRequisicaoPostSeraChamado() throws IOException, InterruptedException {
-        String userInput = String.format("Teste%spets.csv",
-                System.lineSeparator());
-        ByteArrayInputStream bais = new ByteArrayInputStream(userInput.getBytes());
-        System.setIn(bais);
-
-        when(client.postPets(anyString(), any())).thenReturn(response);
+    public void deveVerificarSeDispararRequisicaoPostSeraChamado() throws IOException,
+            InterruptedException {
+        when(scanner.nextLine()).thenReturn("Teste", "pets.csv");
+        when(client.postPets(anyString(), any(PetDto.class))).thenReturn(response);
+        when(response.statusCode()).thenReturn(200);
 
         petService.cadastrarPets();
-        verify(client.postPets(anyString(), anyString()), atLeast(1));
+
+        verify(client, atLeast(1)).postPets(anyString(), any(PetDto.class));
     }
 }
